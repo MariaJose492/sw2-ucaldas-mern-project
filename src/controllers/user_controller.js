@@ -5,21 +5,25 @@ const createUser = async (req, res) => {
         const {
             user_name,
             lastname,
-            nacionality,
+            nationality,
             document,
             user_email,
             password,
             user_active,
         } = req.body;
 
+        const avatar = req.file ? req.file.filename : null;
+        console.log(avatar);
+        
         const newUser = await userModel.create({
             user_name,
             lastname,
-            nacionality,
+            nationality,
             document,
             user_email,
             password,
             user_active,
+            avatar
         });
         console.log(req.body);
         console.log(newUser);
@@ -54,25 +58,26 @@ const editUser = async (req, res) => {
         const {
             user_name,
             lastname,
-            nacionality,
+            nationality,
             document,
             user_email,
             password,
             user_active,
         } = req.body;
 
+        const userEdit = {};
+        // Se puede hacer así o de la forma que se verificó en el create
+        if(req.file) userEdit.avatar = req.file.filename; 
+        userEdit.user_name = user_name;
+        userEdit.lastname = lastname;
+        userEdit.nationality = nationality;
+        userEdit.document = document;
+        userEdit.user_email = user_email;
+        userEdit.password = password;
+        userEdit.user_active = user_active;
+
         const user = await userModel.findByIdAndUpdate(
-            id,
-            {
-                user_name,
-                lastname,
-                nacionality,
-                document,
-                user_email,
-                password,
-                user_active,
-            }
-        )
+            id, user)
         console.log(user);
         res.status(200).json(user)
     } catch (error) {
